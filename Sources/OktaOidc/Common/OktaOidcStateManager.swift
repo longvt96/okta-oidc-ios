@@ -196,7 +196,10 @@ open class OktaOidcStateManager: NSObject, NSSecureCoding {
     }
 
     @objc class func readFromSecureStorage(for config: OktaOidcConfig) throws -> OktaOidcStateManager {
-        return try readFromSecureStorage(forKey: config.clientId + "new")
+        guard let state = try? readFromSecureStorage(forKey: config.clientId) else {
+            return try readFromSecureStorage(forKey: config.clientId + "new")
+        }
+        return state
     }
     
     @objc func writeToSecureStorage() throws {
