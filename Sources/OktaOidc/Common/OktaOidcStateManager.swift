@@ -166,6 +166,7 @@ open class OktaOidcStateManager: NSObject, NSSecureCoding {
     }
 
     @objc public func removeFromSecureStorage() throws {
+        try? OktaOidcKeychain.remove(key: self.clientId)
         try OktaOidcKeychain.remove(key: self.clientId + "new")
     }
     
