@@ -166,7 +166,7 @@ open class OktaOidcStateManager: NSObject, NSSecureCoding {
     }
 
     @objc public func removeFromSecureStorage() throws {
-        try OktaOidcKeychain.remove(key: self.clientId)
+        try OktaOidcKeychain.remove(key: self.clientId + "new")
     }
     
     @available(*, deprecated, message: "This method deletes all keychain items accessible to an application. Use `removeFromSecureStorage` to remove Okta items.")
@@ -196,7 +196,7 @@ open class OktaOidcStateManager: NSObject, NSSecureCoding {
     }
 
     @objc class func readFromSecureStorage(for config: OktaOidcConfig) throws -> OktaOidcStateManager {
-        return try readFromSecureStorage(forKey: config.clientId)
+        return try readFromSecureStorage(forKey: config.clientId + "new")
     }
     
     @objc func writeToSecureStorage() throws {
@@ -208,7 +208,7 @@ open class OktaOidcStateManager: NSObject, NSSecureCoding {
         }
         
         try OktaOidcKeychain.set(
-            key: self.clientId,
+            key: self.clientId + "new",
             data: authStateData,
             accessibility: self.accessibility
         )
@@ -220,12 +220,12 @@ open class OktaOidcStateManager: NSObject, NSSecureCoding {
         
         if #available(iOS 11, OSX 10.14, *) {
             guard let state = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(encodedAuthState) as? OktaOidcStateManager else {
-                throw OktaOidcKeychainError.failed("Failed to decode OktaOidcStateManager for key: \(secureStorageKey)")
+                throw OktaOidcKeychainError.failed("Failed to decode OktaOidcStateManager")
             }
             return state
         } else {
             guard let state = NSKeyedUnarchiver.unarchiveObject(with: encodedAuthState) as? OktaOidcStateManager else {
-                throw OktaOidcKeychainError.failed("Failed to decode (legacy) OktaOidcStateManager for key: \(secureStorageKey)")
+                throw OktaOidcKeychainError.failed("Failed to decode (legacy) OktaOidcStateManager")
             }
             return state
         }
